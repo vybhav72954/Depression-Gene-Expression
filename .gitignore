@@ -140,7 +140,6 @@ pip-selfcheck.json
 *.svgz
 
 # Portable Document Format
-*.pdf
 
 # X BitMap
 *.xbm
