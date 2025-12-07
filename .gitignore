@@ -51,7 +51,7 @@ data/*
 
 *.csv
 *.pkl
-*.txt
+*/**.txt
 
 # IntelliJ
 out/
