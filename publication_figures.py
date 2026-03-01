@@ -218,6 +218,10 @@ def figure_1a_discovery_boxplot(X_disc, y_disc, gene_names_disc):
     ax.set_title('Discovery Cohort (GSE54564)', fontweight='bold')
     ax.axhline(y=0, color='gray', linestyle='--', alpha=0.5, linewidth=0.8)
 
+    # FIX: Dynamically increase y-axis limit by 25% to prevent box overlap
+    y_min, y_max = ax.get_ylim()
+    ax.set_ylim(y_min, y_max + (y_max - y_min) * 0.25)
+
     p_text = f'p = {p:.3f}' if p >= 0.001 else f'p = {p:.2e}'
     ax.annotate(f"Cohen's d = {d:.2f}\n{p_text}",
                 xy=(0.95, 0.95), xycoords='axes fraction',
@@ -268,6 +272,10 @@ def figure_1b_validation_boxplot(X_val, y_val, gene_names_val):
     ax.set_ylabel('Endothelial Score (z-score)')
     ax.set_title('Validation Cohort (GSE98793)', fontweight='bold')
     ax.axhline(y=0, color='gray', linestyle='--', alpha=0.5, linewidth=0.8)
+
+    # FIX: Dynamically increase y-axis limit by 25% to prevent box overlap
+    y_min, y_max = ax.get_ylim()
+    ax.set_ylim(y_min, y_max + (y_max - y_min) * 0.25)
 
     p_text = f'p = {p:.4f}' if p >= 0.0001 else f'p = {p:.2e}'
     stars = '**' if p < 0.01 else ('*' if p < 0.05 else '')
@@ -419,10 +427,12 @@ def figure_1d_replication_heatmap():
         ax.text(2.15, i, rep, ha='center', va='center', fontsize=14,
                 color=color, fontweight='bold')
 
-    ax.text(2.15, -0.8, 'Rep.', ha='center', va='center', fontsize=10, fontweight='bold')
-    ax.set_xlim(-0.5, 2.5)
+    ax.text(2.15, -0.6, 'Rep.', ha='center', va='center', fontsize=10, fontweight='bold')
 
-    ax.set_title('Cell-Type Effect Sizes & Replication', fontweight='bold')
+    # FIX: Expanded x-axis limit from 2.5 to 2.8 to prevent text cutoff
+    ax.set_xlim(-0.5, 2.8)
+
+    ax.set_title('Cell-Type Effect Sizes & Replication', fontweight='bold', pad=20)
 
     cbar = plt.colorbar(im, ax=ax, fraction=0.03, pad=0.15)
     cbar.set_label("Cohen's d", rotation=270, labelpad=15)
@@ -466,7 +476,7 @@ def figure_2a_gene_counts():
 
     ax.set_ylabel('Number of Consensus Genes', fontsize=12)
     ax.set_title('Endothelial-Correlated Consensus Genes', fontweight='bold')
-    ax.set_ylim(0, max(counts) * 1.2)
+    ax.set_ylim(0, max(counts) * 1.25)
 
     plt.tight_layout()
     plt.savefig(f'{OUTPUT_DIR}/Figure_2A_Consensus_Gene_Counts.png', dpi=DPI)
@@ -818,7 +828,9 @@ def figure_4c_subgroup_effects():
                 f'd = {val:.2f}', va='center', fontsize=11, fontweight='bold')
 
     ax.legend(loc='lower right', fontsize=10)
-    ax.set_xlim(0, max(effect_sizes) * 1.25)
+
+    # FIX: Expanded x-axis limit from 1.25 to 1.45 to prevent text colliding with the legend
+    ax.set_xlim(0, max(effect_sizes) * 1.45)
 
     plt.tight_layout()
     plt.savefig(f'{OUTPUT_DIR}/Figure_4C_Subgroup_Effects.png', dpi=DPI)
