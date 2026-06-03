@@ -191,8 +191,8 @@ def create_table2_sample_characteristics():
         if anx_cols:
             anx_data = full_meta[anx_cols[0]].astype(str).str.lower()
             n_anx = sum(anx_data.str.contains('yes|anxiety'))
-            n_no_anx = sum(anx_data.str.contains('no'))
-            val_anxiety = f"{n_anx} with anxiety, {n_no_anx} without"
+            # Report within-MDD (all anxiety="yes" samples are MDD cases):
+            val_anxiety = f"{n_anx} with anxiety, {val_mdd - n_anx} without"
 
     # Create table
     characteristics = [
@@ -202,8 +202,8 @@ def create_table2_sample_characteristics():
         ('Age (years), mean +/- SD', disc_age, val_age),
         ('Female, n (%)', disc_female, val_female),
         ('MDD Anxiety Status', 'N/A', val_anxiety),
-        ('Platform', 'Illumina HumanHT-12 v4', 'Affymetrix U133 Plus 2.0'),
-        ('Tissue', 'Whole Blood', 'Whole Blood'),
+        ('Platform', 'Illumina HumanHT-12 v3 (GPL6947)', 'Affymetrix U133 Plus 2.0'),
+        ('Tissue', 'Postmortem brain (amygdala)', 'Whole blood'),
         ('GEO Accession', 'GSE54564', 'GSE98793'),
     ]
 
@@ -408,6 +408,7 @@ def create_table5_regression_results():
         f.write("Model 1: Unadjusted (diagnosis only).\n")
         f.write("Model 2: Adjusted for age.\n")
         f.write("Model 3: Adjusted for age and anxiety status.\n")
+        f.write("Model 4 (Extended): Additionally adjusted for sex and microarray batch.\n")
         f.write("B = regression coefficient; CI = confidence interval.\n")
 
     print(f"  Done - Table 5 saved")

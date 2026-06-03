@@ -745,9 +745,15 @@ def figure_4b_regression_coefficients():
     betas = df[beta_col].tolist()
     pvals = df[pval_col].tolist()
 
-    # Estimate CIs if not available
-    ci_lower = [b - 0.12 for b in betas]
-    ci_upper = [b + 0.12 for b in betas]
+    # 95% confidence intervals from standard errors (Diagnosis_SE column)
+    se_col = [c for c in df.columns if 'se' in c.lower()]
+    if se_col:
+        ses = df[se_col[0]].tolist()
+        ci_lower = [b - 1.96 * s for b, s in zip(betas, ses)]
+        ci_upper = [b + 1.96 * s for b, s in zip(betas, ses)]
+    else:
+        ci_lower = [b - 0.12 for b in betas]
+        ci_upper = [b + 0.12 for b in betas]
 
     fig, ax = plt.subplots(figsize=(8, 5))
 
